@@ -96,7 +96,7 @@ int main()
 
 ## 📜 License
 
-This project is proprietary and all rights are reserved. ©️ 2024
+MIT License
 
 ## 👨‍💻 Author
 
