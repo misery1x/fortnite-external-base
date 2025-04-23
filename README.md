@@ -103,4 +103,4 @@ MIT License
 Made with 💖 by Stackswise
 
 ---
-⭐ Star this repository if you find it helpful! 
+⭐ Star this repository.
