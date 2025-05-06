@@ -40,10 +40,6 @@ void engine_class::start( )
 
 void engine_class::load_driver( )
 {
-    // Yes this source is using shitty sofmains pasted driver, :sob:
-    // Btw this is a very shit way of loading a driver, your downloading to disk, and anyone can grab your driver easily.
-    // Also makes source very slow cause of the bytes.
-
     std::string driver_path = "C:\\Windows\\System32\\Tasks\\shitty_driver.sys";
     std::string mapper_path = "C:\\Windows\\System32\\Tasks\\shitty_mapper.exe";
 
@@ -57,13 +53,13 @@ void engine_class::initialize( )
 {
     console.setconsoletitle("fn-base - loader");
 
-    if (!driver.FindDriverHandle())
+    if (!Driver::Init())
     {
         console.writeline("Driver not found!", true);
         console.beep(325, 1000);
         console.sleep(2000);
         load_driver();
-        console.writeline("Loaded driver success! - FULL DETECTED", true);
+        console.writeline("Loaded driver success!", true);
         console.sleep(2000);
     }
 
@@ -75,9 +71,9 @@ void engine_class::initialize( )
     }
     console.writeline("FortniteClient-Win64-Shipping.exe Found!", true);
 
-    driver.process_id = driver.FindProcess(L"FortniteClient-Win64-Shipping.exe");
-    memory.base_address = driver.FindImage();
-    driver.DecryptCr3();
+    Driver::ProcessID = Driver::FindProcess(L"FortniteClient-Win64-Shipping.exe");
+    BaseAddress = Driver::GetBase();
+    Driver::CR3();
 
     std::thread([&]()
     {

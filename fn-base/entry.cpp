@@ -1,6 +1,6 @@
 #include "engine/engine.hpp"
 
-// Stackswise 
+// MADE WITH LOVE BY Stackswise 
 
 int main( )
 {

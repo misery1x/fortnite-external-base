@@ -16,16 +16,16 @@ public:
 	{
 		camera_position_s camera;
 
-		uintptr_t location_pointer = memory.Read<uintptr_t>(cache.UWorld + 0x138); //
-		uintptr_t rotation_pointer = memory.Read<uintptr_t>(cache.UWorld + 0x148); //
+		uintptr_t location_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x168); //
+		uintptr_t rotation_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x178); //
 		FNRot fnrot{};
-		fnrot.a = memory.Read<double>(rotation_pointer);
-		fnrot.b = memory.Read<double>(rotation_pointer + 0x20);
-		fnrot.c = memory.Read<double>(rotation_pointer + 0x1D0);
-		camera.location = memory.Read<FVector>(location_pointer);
+		fnrot.a = ReadMemory<double>(rotation_pointer);
+		fnrot.b = ReadMemory<double>(rotation_pointer + 0x20);
+		fnrot.c = ReadMemory<double>(rotation_pointer + 0x1D0);
+		camera.location = ReadMemory<FVector>(location_pointer);
 		camera.rotation.x = asin(fnrot.c) * (180.0 / M_PI);
 		camera.rotation.y = ((atan2(fnrot.a * -1, fnrot.b) * (180.0 / M_PI)) * -1) * -1;
-		camera.fov = memory.Read<float>(cache.PlayerController + 0x3AC) * 90.0f;
+		camera.fov = ReadMemory<float>(cache.PlayerController + 0x3AC) * 90.0f;
 
 		return camera;
 	}
@@ -54,10 +54,10 @@ class bones_class
 public:
 	static FVector GetBoneLocation(uintptr_t mesh, int bone_id)
 	{
-		uintptr_t bone_array = memory.Read<uintptr_t>(mesh + offsets::BoneArray);
-		if (bone_array == 0) bone_array = memory.Read<uintptr_t>(mesh + offsets::BoneCache);
-		FTransform bone = memory.Read<FTransform>(bone_array + (bone_id * 0x60));
-		FTransform component_to_world = memory.Read<FTransform>(mesh + offsets::ComponentToWorld);
+		uintptr_t bone_array = ReadMemory<uintptr_t>(mesh + offsets::BoneArray);
+		if (bone_array == 0) bone_array = ReadMemory<uintptr_t>(mesh + offsets::BoneCache);
+		FTransform bone = ReadMemory<FTransform>(bone_array + (bone_id * 0x60));
+		FTransform component_to_world = ReadMemory<FTransform>(mesh + offsets::ComponentToWorld);
 		D3DMATRIX matrix = MatrixMultiplication(bone.ToMatrixWithScale(), component_to_world.ToMatrixWithScale());
 		return FVector(matrix._41, matrix._42, matrix._43);
 	}
@@ -68,8 +68,8 @@ class utility_class
 public:
 	bool IsEnemyVisible(uintptr_t Mesh_MJ)
 	{
-		auto Seconds = memory.Read<double>(cache.UWorld + 0x158);
-		auto LastRenderTime = memory.Read<float>(Mesh_MJ + 0x32C);
+		auto Seconds = ReadMemory<double>(cache.UWorld + 0x158);
+		auto LastRenderTime = ReadMemory<float>(Mesh_MJ + 0x32C);
 		return Seconds - LastRenderTime <= 0.06f;
 	}
 
