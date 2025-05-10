@@ -4,7 +4,7 @@
 
 #define PI 3.14159265358979323846f
 
-D3DMATRIX MatrixMultiplication(D3DMATRIX pm1, D3DMATRIX pm2)
+inline D3DMATRIX MatrixMultiplication(D3DMATRIX pm1, D3DMATRIX pm2)
 {
 	D3DMATRIX pout{};
 	pout._11 = pm1._11 * pm2._11 + pm1._12 * pm2._21 + pm1._13 * pm2._31 + pm1._14 * pm2._41;

@@ -138,7 +138,8 @@
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="entry.cpp" />
-    <ClCompile Include="game\actors\actors.cpp" />
+    <ClCompile Include="game\features\aimbot\aimbot.cpp" />
+    <ClCompile Include="game\features\esp\actors.cpp" />
     <ClCompile Include="game\drawing\drawing.cpp" />
     <ClCompile Include="overlay\overlay.cpp" />
     <ClCompile Include="utility\console\console.cpp" />
@@ -153,7 +154,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\engine.hpp" />
-    <ClInclude Include="game\actors\actors.hpp" />
+    <ClInclude Include="game\features\aimbot\aimbot.hpp" />
+    <ClInclude Include="game\features\esp\actors.hpp" />
     <ClInclude Include="game\drawing\drawing.hpp" />
     <ClInclude Include="game\sdk\camera.hpp" />
     <ClInclude Include="game\sdk\Matrix.hpp" />
@@ -177,6 +179,10 @@
     <ClInclude Include="vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="vendor\kernel\communications.hpp" />
+    <ClInclude Include="vendor\keyauth\auth.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="vendor\keyauth\library_x64.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

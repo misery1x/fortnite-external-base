@@ -33,6 +33,13 @@ void console_class::writeline(std::string text, bool new_line)
 	}
 }
 
+void console_class::enter_key()
+{
+	std::cout << rang::fg::white << "[" << rang::style::reset;
+	std::cout << rang::fg::cyan << "+" << rang::style::reset;
+	std::cout << rang::fg::white << "] License: " << rang::style::reset;
+}
+
 void console_class::writeline_loader(std::string text)
 {
 	std::cout << rang::fg::white << "[" << rang::style::reset;

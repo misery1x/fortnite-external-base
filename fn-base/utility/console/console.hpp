@@ -13,7 +13,8 @@ public:
 	void writeline(std::string text, bool new_line);
 	void writeline_loader(std::string text);
 	void cleanline();
-	
+	void enter_key();
+
 	// Utility
 	void setconsoletitle(std::string title);
 	void clearconsole();
@@ -26,6 +27,6 @@ public:
 	template<typename T>
 	void WriteLinePointer(std::string Pointer, T Value)
 	{
-		std::cout << "[+] " << Pointer << ": 0x" << std::hex << Value << std::dec << std::endl;
+		std::cout << "[fn-base] " << Pointer << ": 0x" << std::hex << Value << std::dec << std::endl;
 	}
 }; inline console_class console;

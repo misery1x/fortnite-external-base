@@ -16,7 +16,7 @@ void drawing_class::AddRectFilled(const ImVec2& p_min, const ImVec2& p_max, ImU3
 
 }
 
-void drawing_class::draw_box(float BoxWidth, FVector2D Root, FVector2D HeadBox, ImColor Color)
+void drawing_class::Draw2DBox(float BoxWidth, FVector2D Root, FVector2D HeadBox, ImColor Color)
 {
     // Draw acual box
     ImGui::GetBackgroundDrawList()->AddRect(ImVec2(HeadBox.x - BoxWidth / 2.0f, HeadBox.y), ImVec2(Root.x + BoxWidth / 2.0f, Root.y), Color, 0.0f, 0, 1.0f);

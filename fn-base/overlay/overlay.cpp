@@ -17,7 +17,7 @@
 
 // Custom
 #include "../game/utility/settings.hpp"
-#include "../game/actors/actors.hpp"
+#include "../game/features/esp/actors.hpp"
 #include "../utility/console/console.hpp"
 #include "../game/utility/settings.hpp"
 
@@ -56,37 +56,37 @@ bool overlay_class::initialize_imgui( )
 	wc.lpszClassName = L"Fortnite";
 	RegisterClassEx(&wc);
 
-	globals.WindowHandle = CreateWindowEx( WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TRANSPARENT, L"Fortnite", L"Fortnite", WS_POPUP, 0, 0, globals.ScreenWidth, globals.ScreenHeight, NULL, NULL, GetModuleHandle(NULL), NULL);
+	Globals->WindowHandle = CreateWindowEx( WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TRANSPARENT, L"Fortnite", L"Fortnite", WS_POPUP, 0, 0, Globals->ScreenWidth, Globals->ScreenHeight, NULL, NULL, GetModuleHandle(NULL), NULL);
 
-	if (!globals.WindowHandle)
+	if (!Globals->WindowHandle)
 		return false;
 
-	SetLayeredWindowAttributes(globals.WindowHandle, RGB(0, 0, 0), 255, LWA_ALPHA);
+	SetLayeredWindowAttributes(Globals->WindowHandle, RGB(0, 0, 0), 255, LWA_ALPHA);
 
-	LONG ex_style = GetWindowLong(globals.WindowHandle, GWL_EXSTYLE);
+	LONG ex_style = GetWindowLong(Globals->WindowHandle, GWL_EXSTYLE);
 	ex_style |= WS_EX_TRANSPARENT | WS_EX_LAYERED;
-	SetWindowLong(globals.WindowHandle, GWL_EXSTYLE, ex_style);
+	SetWindowLong(Globals->WindowHandle, GWL_EXSTYLE, ex_style);
 
 	ex_style |= WS_EX_TRANSPARENT;
-	SetWindowLong(globals.WindowHandle, GWL_EXSTYLE, ex_style);
+	SetWindowLong(Globals->WindowHandle, GWL_EXSTYLE, ex_style);
 
 	MARGINS margins = { -1 };
-	DwmExtendFrameIntoClientArea(globals.WindowHandle, &margins);
+	DwmExtendFrameIntoClientArea(Globals->WindowHandle, &margins);
 
-	ShowWindow(globals.WindowHandle, SW_SHOW);
-	UpdateWindow(globals.WindowHandle);
+	ShowWindow(Globals->WindowHandle, SW_SHOW);
+	UpdateWindow(Globals->WindowHandle);
 
 	DXGI_SWAP_CHAIN_DESC swap_chain_description;
 	ZeroMemory(&swap_chain_description, sizeof(swap_chain_description));
 	swap_chain_description.BufferCount = 2;
-	swap_chain_description.BufferDesc.Width = globals.ScreenWidth;
-	swap_chain_description.BufferDesc.Height = globals.ScreenHeight;
+	swap_chain_description.BufferDesc.Width = Globals->ScreenWidth;
+	swap_chain_description.BufferDesc.Height = Globals->ScreenHeight;
 	swap_chain_description.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swap_chain_description.BufferDesc.RefreshRate.Numerator = 60;
 	swap_chain_description.BufferDesc.RefreshRate.Denominator = 1;
 	swap_chain_description.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	swap_chain_description.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swap_chain_description.OutputWindow = globals.WindowHandle;
+	swap_chain_description.OutputWindow = Globals->WindowHandle;
 	swap_chain_description.SampleDesc.Count = 1;
 	swap_chain_description.SampleDesc.Quality = 0;
 	swap_chain_description.Windowed = TRUE;
@@ -111,7 +111,7 @@ bool overlay_class::initialize_imgui( )
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 
-	ImGui_ImplWin32_Init(globals.WindowHandle);
+	ImGui_ImplWin32_Init(Globals->WindowHandle);
 	ImGui_ImplDX11_Init(D3D_Device, D3D_Device_ctx);
 
 	font = io.Fonts->AddFontFromFileTTF(("C:\\Windows\\Fonts\\arialbd.ttf"), 18.f);
@@ -126,10 +126,10 @@ bool overlay_class::render_loop( )
 
 	while (msg.message != WM_QUIT)
 	{
-		UpdateWindow(globals.WindowHandle);
-		ShowWindow(globals.WindowHandle, SW_SHOW);
+		UpdateWindow(Globals->WindowHandle);
+		ShowWindow(Globals->WindowHandle, SW_SHOW);
 
-		if (PeekMessageA(&msg, globals.WindowHandle, 0, 0, PM_REMOVE))
+		if (PeekMessageA(&msg, Globals->WindowHandle, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessageA(&msg);
@@ -161,7 +161,7 @@ bool overlay_class::render_loop( )
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
-	DestroyWindow(globals.WindowHandle);
+	DestroyWindow(Globals->WindowHandle);
 
 	return true;
 }
@@ -180,14 +180,14 @@ void overlay_class::draw_loop( )
 	lastFrameTime = currentTime;
 	fps = 1.0f / deltaTime.count();
 
-	if (misc.show_fps)
+	if (Misc->Watermark)
 	{
 		ImGui::SetNextWindowPos(ImVec2(10, 10));
 		ImGui::SetNextWindowBgAlpha(0.35f);
 		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
 			ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
-		ImGui::Text("FPS: %.1f", fps);
+		ImGui::Text("fn-base | %.1f FPS", fps);
 		ImGui::End();
 	}
 
@@ -205,19 +205,29 @@ void overlay_class::draw_loop( )
 
 void overlay_class::menu_loop( )
 {
-	if (GetAsyncKeyState(VK_F1) & 1)
-		globals.gui_window = !globals.gui_window;
+	if (GetAsyncKeyState(VK_INSERT) & 1)
+		Globals->GUIWindow = !Globals->GUIWindow;
 
-	if (globals.gui_window)
+	if (Globals->GUIWindow)
 	{
-		ImGui::SetWindowSize("fn-base", ImVec2(500, 500));
-		ImGui::Begin("fn-base", &globals.gui_window, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+		ImGui::SetWindowSize("fn-base", ImVec2(450, 800));
+		ImGui::Begin("fn-base", &Globals->GUIWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse || ImGuiWindowFlags_NoTitleBar || ImGuiWindowFlags_NoResize);
 
+		ImGui::Text("Aimbot");
+		ImGui::Checkbox("Enable Aimbot", &Aimbot->Enable);
+		ImGui::Checkbox("Draw FOV", &Aimbot->DrawFov);
+		ImGui::SliderInt("Field Of View", &Aimbot->FieldOfView, 1, 469);
+		ImGui::SliderInt("Smoothness X", &Aimbot->SmoothingX, 1, 15);
+		ImGui::SliderInt("Smoothness Y", &Aimbot->SmoothingY, 1, 15);
+		ImGui::Separator();
 		ImGui::Text("Visuals");
-		ImGui::Checkbox("Box", &visuals.box);
-		ImGui::SliderInt("Render Distnace", &visuals.render_distance, 0, 369); // Fortnite render distance doesn't go past like 250 or some shit. so anything above doesn't matter
+		ImGui::Checkbox("Enable Visuals", &Visuals->Enable);
+		ImGui::Checkbox("2D Box", &Visuals->Box);
+		ImGui::Checkbox("Skeleton", &Visuals->Skeleton);
+		ImGui::Checkbox("Show Bones", &Visuals->DebugBones);
+		ImGui::Separator();
 		ImGui::Text("Misc");
-		ImGui::Checkbox("Show Overlay FPS", &misc.show_fps);
+		ImGui::Checkbox("Show Watermark", &Misc->Watermark);
 
 		ImGui::End();
 	}

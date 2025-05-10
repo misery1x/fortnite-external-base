@@ -1,5 +1,16 @@
 #pragma once
 
+#include <cstdint>
+#include <vector>
+#include <cmath>
+#include "vector.hpp"
+#include "Matrix.hpp"
+#include "camera.hpp"
+#include "../utility/settings.hpp"
+#include "../utility/cache.hpp"
+#include "../utility/offsets.hpp"
+#include "../../vendor/kernel/communications.hpp"
+
 #define M_PI 3.14159265358979323846
 
 struct FNRot
@@ -15,9 +26,10 @@ public:
 	static camera_position_s GetCamera()
 	{
 		camera_position_s camera;
+		auto camera_postion = camera;
 
-		uintptr_t location_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x168); //
-		uintptr_t rotation_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x178); //
+		uintptr_t location_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x168);
+		uintptr_t rotation_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x178);
 		FNRot fnrot{};
 		fnrot.a = ReadMemory<double>(rotation_pointer);
 		fnrot.b = ReadMemory<double>(rotation_pointer + 0x20);
@@ -32,7 +44,7 @@ public:
 
 	static FVector2D ProjectWorldToScreen(FVector WorldLocation)
 	{
-		camera_postion = GetCamera();
+		auto camera_postion = GetCamera();
 
 		if (WorldLocation.x == 0) return FVector2D(0, 0);
 
@@ -45,7 +57,7 @@ public:
 
 		if (vTransformed.z < 1.f) vTransformed.z = 1.f;
 
-		return FVector2D((globals.ScreenWidth / 2.0f) + vTransformed.x * (((globals.ScreenWidth / 2.0f) / tanf(camera_postion.fov * (float)M_PI / 360.f))) / vTransformed.z, (globals.ScreenHeight / 2.0f) - vTransformed.y * (((globals.ScreenWidth / 2.0f) / tanf(camera_postion.fov * (float)M_PI / 360.f))) / vTransformed.z);
+		return FVector2D((Globals->ScreenWidth / 2.0f) + vTransformed.x * (((Globals->ScreenWidth / 2.0f) / tanf(camera_postion.fov * (float)M_PI / 360.f))) / vTransformed.z, (Globals->ScreenHeight / 2.0f) - vTransformed.y * (((Globals->ScreenWidth / 2.0f) / tanf(camera_postion.fov * (float)M_PI / 360.f))) / vTransformed.z);
 	}
 }; inline sdk_class sdk;
 
@@ -63,19 +75,19 @@ public:
 	}
 }; inline bones_class bones;
 
-class utility_class
+class game_utility_class
 {
 public:
 	bool IsEnemyVisible(uintptr_t Mesh_MJ)
 	{
-		auto Seconds = ReadMemory<double>(cache.UWorld + 0x158);
-		auto LastRenderTime = ReadMemory<float>(Mesh_MJ + 0x32C);
+		double Seconds = ReadMemory<double>(cache.UWorld + 0x158);
+		float LastRenderTime = ReadMemory<float>(Mesh_MJ + 0x32C);
 		return Seconds - LastRenderTime <= 0.06f;
 	}
 
 	bool IsEnemyInScreen(FVector2D screen_location)
 	{
-		if (screen_location.x > 0 && screen_location.x < globals.ScreenWidth && screen_location.y > 0 && screen_location.y < globals.ScreenHeight) return true;
+		if (screen_location.x > 0 && screen_location.x < Globals->ScreenWidth && screen_location.y > 0 && screen_location.y < Globals->ScreenHeight) return true;
 		else return false;
 	}
-}; inline utility_class utility;
+}; inline game_utility_class game_utility;

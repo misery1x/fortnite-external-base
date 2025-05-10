@@ -12,11 +12,48 @@
 
 #include "../vendor/kernel/communications.hpp"
 #include "../overlay/overlay.hpp"
-#include "../game/actors/actors.hpp"
+#include "../game/features/esp/actors.hpp"
 
 // Driver Bytes
 #include "../utility/bytes/driver.hpp"
 #include "../utility/bytes/mapper.hpp"
+
+// Auth
+#include "../vendor/keyauth/auth.hpp"
+
+using namespace KeyAuth;
+
+std::string name = (""); // REPLACE WITH YOUR KEYAUTH DETAILS.
+std::string ownerid = ("");
+std::string version = ("1.0");
+std::string url = ("https://keyauth.win/api/1.3/");
+std::string path = ("");
+
+api KeyAuthApp(name, ownerid, version, url, path);
+
+void engine_class::start_auth()
+{
+    KeyAuthApp.init();
+    if (!KeyAuthApp.response.success)
+    {
+        std::cout << ("Status: ") << KeyAuthApp.response.message;
+        Sleep(1500);
+        exit(1);
+    }
+
+    std::string Key;
+    console.enter_key();
+    std::cin >> Key;
+    KeyAuthApp.license(Key);
+
+    if (KeyAuthApp.response.message.empty()) exit(11);
+    if (!KeyAuthApp.response.success)
+    {
+        std::cout << ("Status: ") << KeyAuthApp.response.message;
+        Sleep(1500);
+        exit(1);
+    }
+}
 
 void engine_class::start( )
 {
@@ -34,7 +71,9 @@ void engine_class::start( )
 	console.writeline(windows_text, true);
 	console.writeline(build_date_text, true);
 	console.writeline(loader_version, true);
+    std::cout << "" << std::endl;
 
+    start_auth();
     initialize();
 }
 

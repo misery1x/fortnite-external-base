@@ -30,7 +30,7 @@
     <ClCompile Include="overlay\overlay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game\actors\actors.cpp">
+    <ClCompile Include="game\features\esp\actors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game\drawing\drawing.cpp">
@@ -55,6 +55,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vendor\imgui\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\features\aimbot\aimbot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,7 +89,7 @@
     <ClInclude Include="game\utility\settings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game\actors\actors.hpp">
+    <ClInclude Include="game\features\esp\actors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="game\utility\offsets.hpp">
@@ -134,5 +137,14 @@
     <ClInclude Include="vendor\imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game\features\aimbot\aimbot.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\keyauth\auth.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="vendor\keyauth\library_x64.lib" />
   </ItemGroup>
 </Project>

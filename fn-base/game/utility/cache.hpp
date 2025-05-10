@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <stdint.h>
 #include <float.h>
+#include <vector>
 
 class cache_class
 {
@@ -30,5 +31,5 @@ public:
 	uintptr_t PlayerState;
 };
 
-std::vector<Entity_class> EntityList;
-std::vector<Entity_class> TempEntityList;
+inline std::vector<Entity_class> EntityList;
+inline std::vector<Entity_class> TempEntityList;
