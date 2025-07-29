@@ -28,8 +28,8 @@ public:
 		camera_position_s camera;
 		auto camera_postion = camera;
 
-		uintptr_t location_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x168);
-		uintptr_t rotation_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x178);
+		uintptr_t location_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x180);
+		uintptr_t rotation_pointer = ReadMemory<uintptr_t>(cache.UWorld + 0x190);
 		FNRot fnrot{};
 		fnrot.a = ReadMemory<double>(rotation_pointer);
 		fnrot.b = ReadMemory<double>(rotation_pointer + 0x20);
@@ -80,7 +80,7 @@ class game_utility_class
 public:
 	bool IsEnemyVisible(uintptr_t Mesh_MJ)
 	{
-		double Seconds = ReadMemory<double>(cache.UWorld + 0x158);
+		double Seconds = ReadMemory<double>(cache.UWorld + 0x200);
 		float LastRenderTime = ReadMemory<float>(Mesh_MJ + 0x32C);
 		return Seconds - LastRenderTime <= 0.06f;
 	}
