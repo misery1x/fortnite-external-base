@@ -37,7 +37,7 @@ public:
 		camera.location = ReadMemory<FVector>(location_pointer);
 		camera.rotation.x = asin(fnrot.c) * (180.0 / M_PI);
 		camera.rotation.y = ((atan2(fnrot.a * -1, fnrot.b) * (180.0 / M_PI)) * -1) * -1;
-		camera.fov = ReadMemory<float>(cache.PlayerController + 0x3AC) * 90.0f;
+		camera.fov = ReadMemory<float>(cache.PlayerController + 0x3B4) * 90.0f;
 
 		return camera;
 	}
